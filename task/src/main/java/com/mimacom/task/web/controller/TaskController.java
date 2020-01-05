@@ -14,8 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mimacom.task.entity.Task;
-import com.mimacom.task.exception.TaskNotFoundException;
-import com.mimacom.task.repository.TaskRepository;
+import com.mimacom.task.service.TaskService;
 
 /**
  * Controller to handle requests to task API
@@ -24,13 +23,12 @@ import com.mimacom.task.repository.TaskRepository;
  *
  */
 @RestController
-//@RequestMapping("/task")
 public class TaskController {
 
-	private final TaskRepository taskRepository;
+	private final TaskService taskService;
 
-	public TaskController(TaskRepository taskRepository) {
-		this.taskRepository = taskRepository;
+	public TaskController(TaskService taskService) {
+		this.taskService = taskService;
 	}
 
 	// TODO --> Sacar negocio a jar y ver como hacer esto multimódulo
@@ -48,8 +46,8 @@ public class TaskController {
 	 *         <code>Task</code>
 	 */
 	@GetMapping("/tasks")
-	public List<Task> all() {
-		return taskRepository.findAll();
+	public List<Task> findAll() {
+		return taskService.findAll();
 	}
 
 	/**
@@ -60,8 +58,8 @@ public class TaskController {
 	 *         not exist
 	 */
 	@GetMapping("/tasks/{id}")
-	public Task one(@PathVariable Integer id) {
-		return taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
+	public Task findById(@PathVariable Integer id) {
+		return taskService.findById(id);
 	}
 
 	/**
@@ -71,8 +69,8 @@ public class TaskController {
 	 * @return data of the created task
 	 */
 	@PostMapping("/tasks")
-	public Task newTask(@RequestBody Task task) {
-		return taskRepository.save(task);
+	public Task createTask(@RequestBody Task task) {
+		return taskService.createTask(task);
 	}
 
 	/**
@@ -83,9 +81,7 @@ public class TaskController {
 	 */
 	@PostMapping("/tasks/{id}/finish")
 	public Task finishTask(@PathVariable Integer id) {
-		Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
-		task.setIsFinished(Boolean.TRUE);
-		return taskRepository.save(task);
+		return taskService.finishTask(id);
 	}
 
 	/**
@@ -95,28 +91,19 @@ public class TaskController {
 	 */
 	@DeleteMapping("/tasks/{id}")
 	public void deleteTask(@PathVariable Integer id) {
-		// TODO --> ver si puedo manejar ERROR!
-		taskRepository.deleteById(id);
+		taskService.deleteTask(id);
 	}
 
 	/**
 	 * Update a task. If it does not exist, create a new task with the given data.
 	 * 
 	 * @param newTask data to modify of the task
-	 * @param id identifier of the task to modify
+	 * @param id      identifier of the task to modify
 	 * @return data updated or created
 	 */
 	@PutMapping("/tasks/{id}")
 	public Task updateTask(@RequestBody Task newTask, @PathVariable Integer id) {
-		return taskRepository.findById(id).map(task -> {
-			task.setName(newTask.getName());
-			task.setDescription(newTask.getDescription());
-			task.setIsFinished(newTask.getIsFinished());
-			return taskRepository.save(task);
-		}).orElseGet(() -> {
-			newTask.setId(id);
-			return taskRepository.save(newTask);
-		});
+		return taskService.updateTask(newTask, id);
 	}
 
 }
