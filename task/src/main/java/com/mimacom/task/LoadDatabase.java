@@ -13,6 +13,8 @@ import com.mimacom.task.repository.TaskRepository;
 import lombok.extern.slf4j.Slf4j;
 
 /**
+ * Class to load data in H2 database
+ * 
  * @author priesgo
  *
  */

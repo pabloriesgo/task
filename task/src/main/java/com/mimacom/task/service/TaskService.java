@@ -6,7 +6,6 @@ package com.mimacom.task.service;
 import java.util.List;
 
 import com.mimacom.task.entity.Task;
-import com.mimacom.task.exception.TaskNotFoundException;
 
 /**
  * Service to handle task operations
@@ -28,9 +27,8 @@ public interface TaskService {
 	 * 
 	 * @param id identifier of the task to find
 	 * @return task found
-	 * @throws TaskNotFoundException excepction thrown when a task does not exist
 	 */
-	Task findById(Integer id) throws TaskNotFoundException;
+	Task findById(Integer id) ;
 
 	/**
 	 * Create a task
@@ -45,9 +43,8 @@ public interface TaskService {
 	 * 
 	 * @param id identifier of the task to mark as finished
 	 * @return task marked as finished
-	 * @throws TaskNotFoundException excepction thrown when a task does not exist
 	 */
-	Task finishTask(Integer id) throws TaskNotFoundException;
+	Task finishTask(Integer id) ;
 
 	/**
 	 * Removes a task

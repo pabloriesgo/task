@@ -6,6 +6,7 @@ package com.mimacom.task.service.impl;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.mimacom.task.entity.Task;
 import com.mimacom.task.exception.TaskNotFoundException;
@@ -19,6 +20,7 @@ import com.mimacom.task.service.TaskService;
  *
  */
 @Service
+@Transactional
 public class TaskServiceImpl implements TaskService {
 
 	private final TaskRepository taskRepository;
@@ -33,7 +35,7 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	@Override
-	public Task findById(Integer id) throws TaskNotFoundException {
+	public Task findById(Integer id) {
 		return taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
 	}
 
@@ -43,7 +45,7 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	@Override
-	public Task finishTask(Integer id) throws TaskNotFoundException {
+	public Task finishTask(Integer id) {
 		Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
 		task.setIsFinished(Boolean.TRUE);
 		return taskRepository.save(task);
@@ -51,6 +53,7 @@ public class TaskServiceImpl implements TaskService {
 
 	@Override
 	public void deleteTask(Integer id) {
+		taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
 		taskRepository.deleteById(id);
 	}
 

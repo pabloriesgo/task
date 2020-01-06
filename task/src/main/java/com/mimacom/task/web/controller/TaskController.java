@@ -16,6 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mimacom.task.entity.Task;
 import com.mimacom.task.service.TaskService;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 /**
  * Controller to handle requests to task API
  * 
@@ -31,14 +36,6 @@ public class TaskController {
 		this.taskService = taskService;
 	}
 
-	// TODO --> Sacar negocio a jar y ver como hacer esto multimódulo
-
-	// TODO --> JAVADOC de todo --> REVISAR SWAGGER
-
-	// TODO --> HAcaer mensajes de error HTTP para respuestas de error guays
-
-	// TODO --> Nombre único
-
 	/**
 	 * List all existing tasks
 	 * 
@@ -46,6 +43,8 @@ public class TaskController {
 	 *         <code>Task</code>
 	 */
 	@GetMapping("/tasks")
+	@ApiOperation(value = "Find all tasks", notes = "Retrieving the collection of all tasks", response = Task[].class)
+	@ApiResponses({ @ApiResponse(code = 200, message = "Success", response = Task[].class) })
 	public List<Task> findAll() {
 		return taskService.findAll();
 	}
@@ -58,7 +57,11 @@ public class TaskController {
 	 *         not exist
 	 */
 	@GetMapping("/tasks/{id}")
-	public Task findById(@PathVariable Integer id) {
+	@ApiOperation(value = "Find one task", notes = "Retrieving one task", response = Task.class)
+	@ApiResponses({ @ApiResponse(code = 200, message = "Success", response = Task.class),
+			@ApiResponse(code = 404, message = "Not found") })
+	public Task findById(
+			@ApiParam(required = true, name = "id", value = "ID of the task you want to find") @PathVariable Integer id) {
 		return taskService.findById(id);
 	}
 
@@ -69,7 +72,9 @@ public class TaskController {
 	 * @return data of the created task
 	 */
 	@PostMapping("/tasks")
-	public Task createTask(@RequestBody Task task) {
+	@ApiOperation(value = "Create a new task", notes = "Creating a new task", response = Task.class)
+	@ApiResponses({ @ApiResponse(code = 200, message = "Success", response = Task.class) })
+	public Task createTask(@ApiParam(required = true, name = "task", value = "Task to create") @RequestBody Task task) {
 		return taskService.createTask(task);
 	}
 
@@ -80,7 +85,11 @@ public class TaskController {
 	 * @return data of the modified task
 	 */
 	@PostMapping("/tasks/{id}/finish")
-	public Task finishTask(@PathVariable Integer id) {
+	@ApiOperation(value = "Mark a task as finished", notes = "Finishing a task", response = Task.class)
+	@ApiResponses({ @ApiResponse(code = 200, message = "Success", response = Task.class),
+			@ApiResponse(code = 404, message = "Not found") })
+	public Task finishTask(
+			@ApiParam(required = true, name = "id", value = "ID of the task you want to finish") @PathVariable Integer id) {
 		return taskService.finishTask(id);
 	}
 
@@ -90,7 +99,11 @@ public class TaskController {
 	 * @param id identifier of the task to remove
 	 */
 	@DeleteMapping("/tasks/{id}")
-	public void deleteTask(@PathVariable Integer id) {
+	@ApiOperation(value = "Remove an existing task", notes = "Removing a task", response = Task.class)
+	@ApiResponses({ @ApiResponse(code = 200, message = "Success", response = Task.class),
+			@ApiResponse(code = 404, message = "Not found") })
+	public void deleteTask(
+			@ApiParam(required = true, name = "id", value = "ID of the task you want to remove") @PathVariable Integer id) {
 		taskService.deleteTask(id);
 	}
 
@@ -102,7 +115,11 @@ public class TaskController {
 	 * @return data updated or created
 	 */
 	@PutMapping("/tasks/{id}")
-	public Task updateTask(@RequestBody Task newTask, @PathVariable Integer id) {
+	@ApiOperation(value = "Update an existing task", notes = "Updating an existing task", response = Task.class)
+	@ApiResponses({ @ApiResponse(code = 200, message = "Success", response = Task.class),
+			@ApiResponse(code = 404, message = "Not found") })
+	public Task updateTask(@ApiParam(required = true, name = "task", value = "Updated task") @RequestBody Task newTask,
+			@ApiParam(required = true, name = "id", value = "ID of the task you want to update") @PathVariable Integer id) {
 		return taskService.updateTask(newTask, id);
 	}
 
