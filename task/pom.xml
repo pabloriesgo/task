@@ -10,9 +10,9 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.mimacom</groupId>
-	<artifactId>task</artifactId>
+	<artifactId>custom-task-list</artifactId>
 	<version>1.0.0</version>
-	<name>task</name>
+	<name>custom-task-list</name>
 	<description>Project to manage a custom task list</description>
 
 	<properties>
@@ -65,6 +65,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>${project.artifactId}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
